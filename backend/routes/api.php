@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CourseCategoryController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CourseInstructorController;
+use App\Http\Controllers\Api\V1\CourseModuleController;
+use App\Http\Controllers\Api\V1\LessonController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -36,6 +38,18 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/courses/{course}', [CourseController::class, 'show'])
         ->name('api.v1.courses.show');
+
+    Route::get('/courses/{course}/modules', [CourseModuleController::class, 'index'])
+        ->name('api.v1.courses.modules.index');
+
+    Route::get('/course-modules/{courseModule}', [CourseModuleController::class, 'show'])
+        ->name('api.v1.course-modules.show');
+
+    Route::get('/course-modules/{courseModule}/lessons', [LessonController::class, 'index'])
+        ->name('api.v1.course-modules.lessons.index');
+
+    Route::get('/lessons/{lesson}', [LessonController::class, 'show'])
+        ->name('api.v1.lessons.show');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/categories', [CourseCategoryController::class, 'store'])
@@ -78,5 +92,29 @@ Route::prefix('v1')->group(function () {
             '/courses/{course}/instructors/{courseInstructor}',
             [CourseInstructorController::class, 'destroy']
         )->name('api.v1.courses.instructors.destroy');
+
+        Route::post('/courses/{course}/modules', [CourseModuleController::class, 'store'])
+            ->name('api.v1.courses.modules.store');
+
+        Route::match(
+            ['put', 'patch'],
+            '/course-modules/{courseModule}',
+            [CourseModuleController::class, 'update']
+        )->name('api.v1.course-modules.update');
+
+        Route::delete('/course-modules/{courseModule}', [CourseModuleController::class, 'destroy'])
+            ->name('api.v1.course-modules.destroy');
+
+        Route::post('/course-modules/{courseModule}/lessons', [LessonController::class, 'store'])
+            ->name('api.v1.course-modules.lessons.store');
+
+        Route::match(
+            ['put', 'patch'],
+            '/lessons/{lesson}',
+            [LessonController::class, 'update']
+        )->name('api.v1.lessons.update');
+
+        Route::delete('/lessons/{lesson}', [LessonController::class, 'destroy'])
+            ->name('api.v1.lessons.destroy');
     });
 });
